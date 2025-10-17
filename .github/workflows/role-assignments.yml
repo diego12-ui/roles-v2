@@ -7,28 +7,9 @@ on:
         description: Ruta del .ps1 en el repo
         required: true
         default: scripts/roles-v2.ps1
-      Action:
-        type: choice
-        description: Assign o Remove
-        required: true
-        options: [Assign, Remove]
-        default: Assign
-      PrincipalType:
-        type: choice
-        description: Tipo de principal
-        required: true
-        options: ['Grupo de Red','Service Principal','Managed Identity']
       PrincipalName:
         description: Nombre del principal (DisplayName)
         required: true
-      ScopeType:
-        type: choice
-        description: Tipo de scope
-        required: true
-        options: [ManagementGroup, Subscription, ResourceGroup, Resource]
-      ManagementGroupName:
-        description: Nombre del Management Group (si ScopeType=ManagementGroup)
-        required: false
       SubscriptionName:
         description: Nombre de la suscripción (si aplica)
         required: false
@@ -41,12 +22,6 @@ on:
       ResourceName:
         description: Nombre del recurso (si ScopeType=Resource)
         required: false
-      SubresourceId:
-        description: ID completo de subrecurso (opcional si usas ResourceType+ResourceName)
-        required: false
-      RoleName:
-        description: Nombre del rol a asignar/remover
-        required: true
       DuracionTipo:
         type: choice
         description: Permanente o Temporal
@@ -92,19 +67,17 @@ jobs:
           errorActionPreference: stop
           inlineScript: |
             $p = @{
-              Action         = '${{ inputs.Action }}'
-              PrincipalType  = '${{ inputs.PrincipalType }}'
+              Action         = 'Assign'
+              PrincipalType  = 'Managed Identity'
               PrincipalName  = '${{ inputs.PrincipalName }}'
-              ScopeType      = '${{ inputs.ScopeType }}'
-              RoleName       = '${{ inputs.RoleName }}'
+              ScopeType      = 'Resource'
+              RoleName       = 'Reader'
               DuracionTipo   = '${{ inputs.DuracionTipo }}'
             }
-            if ('${{ inputs.ManagementGroupName }}') { $p.ManagementGroupName = '${{ inputs.ManagementGroupName }}' }
             if ('${{ inputs.SubscriptionName }}')    { $p.SubscriptionName    = '${{ inputs.SubscriptionName }}' }
             if ('${{ inputs.ResourceGroupName }}')   { $p.ResourceGroupName   = '${{ inputs.ResourceGroupName }}' }
             if ('${{ inputs.ResourceType }}')        { $p.ResourceType        = '${{ inputs.ResourceType }}' }
-            if ('${{ inputs.ResourceName }}')        { $p.ResourceName        = '${{ inputs.ResourceName }}' }
-            if ('${{ inputs.SubresourceId }}')       { $p.SubresourceId       = '${{ inputs.SubresourceId }}' }
+            if ('${{ inputs.ResourceName }}')        { $p.ResourceName        = '${{ inputs.ResourceName }}'
             if ('${{ inputs.FechaInicioPeru }}')     { $p.FechaInicioPeru     = '${{ inputs.FechaInicioPeru }}' }
             if ('${{ inputs.FechaFinPeru }}')        { $p.FechaFinPeru        = '${{ inputs.FechaFinPeru }}' }
             if ('${{ inputs.CodApp }}')              { $p.CodApp              = '${{ inputs.CodApp }}' }
