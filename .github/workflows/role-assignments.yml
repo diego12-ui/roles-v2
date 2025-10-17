@@ -6,7 +6,7 @@ on:
       scriptPath:
         description: Ruta del .ps1 en el repo
         required: true
-        default: scripts/role_assign.ps1
+        default: scripts/roles-v2.ps1
       Action:
         type: choice
         description: Assign o Remove
