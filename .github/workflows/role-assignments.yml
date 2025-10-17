@@ -37,7 +37,6 @@ on:
       CodApp:
         description: (opcional, no se valida en este script simple)
         required: false
-      Ambiente:
         type: choice
         description: (opcional, no se valida en este script simple)
         required: false
@@ -80,8 +79,6 @@ jobs:
             if ('${{ inputs.ResourceName }}')        { $p.ResourceName        = '${{ inputs.ResourceName }}'
             if ('${{ inputs.FechaInicioPeru }}')     { $p.FechaInicioPeru     = '${{ inputs.FechaInicioPeru }}' }
             if ('${{ inputs.FechaFinPeru }}')        { $p.FechaFinPeru        = '${{ inputs.FechaFinPeru }}' }
-            if ('${{ inputs.CodApp }}')              { $p.CodApp              = '${{ inputs.CodApp }}' }
-            if ('${{ inputs.Ambiente }}')            { $p.Ambiente            = '${{ inputs.Ambiente }}' }
 
             Write-Host "Parámetros efectivos:" ($p | Out-String)
 
