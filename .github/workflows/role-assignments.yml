@@ -59,7 +59,7 @@ jobs:
             $p = @{
               Action         = 'Assign'
               PrincipalType  = 'Managed Identity'
-              PrincipalName  = '${{ inputs.PrincipalName }}'
+              PrincipalName  = 'lappeu2testd01'
               ScopeType      = 'Resource'
               RoleName       = 'Reader'
               DuracionTipo   = 'Permanente'
