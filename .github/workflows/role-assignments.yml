@@ -62,15 +62,12 @@ jobs:
               PrincipalName  = '${{ inputs.PrincipalName }}'
               ScopeType      = 'Resource'
               RoleName       = 'Reader'
-              DuracionTipo   = '${{ inputs.DuracionTipo }}'
+              DuracionTipo   = 'Permanente'
+              SubscriptionName = 'Contabilidad'
+              ResourceGroupName = 'rsgreu2testd01'
+              ResourceType = 'Microsoft.Storage/storageAccounts'
+              ResourceName = 'staceu2testdemod01'
             }
-            if ('${{ inputs.SubscriptionName }}')    { $p.SubscriptionName    = '${{ inputs.SubscriptionName }}' }
-            if ('${{ inputs.ResourceGroupName }}')   { $p.ResourceGroupName   = '${{ inputs.ResourceGroupName }}' }
-            if ('${{ inputs.ResourceType }}')        { $p.ResourceType        = '${{ inputs.ResourceType }}' }
-            if ('${{ inputs.ResourceName }}')        { $p.ResourceName        = '${{ inputs.ResourceName }}'
-            if ('${{ inputs.FechaInicioPeru }}')     { $p.FechaInicioPeru     = '${{ inputs.FechaInicioPeru }}' }
-            if ('${{ inputs.FechaFinPeru }}')        { $p.FechaFinPeru        = '${{ inputs.FechaFinPeru }}' }
-
             Write-Host "Parámetros efectivos:" ($p | Out-String)
 
             $scriptPath = '${{ inputs.scriptPath }}'
