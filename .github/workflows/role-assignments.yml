@@ -47,12 +47,7 @@ jobs:
       - name: Azure Login (Service Principal + Secret)
         uses: azure/login@v2
         with:
-          auth-type: service_principal_secret   # <- clave
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Ejecutar script de asignación de roles (PowerShell)
         uses: azure/powershell@v2
