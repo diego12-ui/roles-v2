@@ -34,13 +34,7 @@ on:
       FechaFinPeru:
         description: Fin Perú "MM/dd/yyyy HH:mm:ss" (si Temporal)
         required: false
-      CodApp:
-        description: (opcional, no se valida en este script simple)
-        required: false
-        type: choice
-        description: (opcional, no se valida en este script simple)
-        required: false
-        options: ['Producción','Certificación','Desarrollo']
+
 
 jobs:
   run:
