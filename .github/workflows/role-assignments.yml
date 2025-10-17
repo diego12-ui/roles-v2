@@ -22,18 +22,6 @@ on:
       ResourceName:
         description: Nombre del recurso (si ScopeType=Resource)
         required: false
-      DuracionTipo:
-        type: choice
-        description: Permanente o Temporal
-        required: true
-        options: [Permanente, Temporal]
-        default: Permanente
-      FechaInicioPeru:
-        description: Inicio Perú "MM/dd/yyyy HH:mm:ss" (si Temporal)
-        required: false
-      FechaFinPeru:
-        description: Fin Perú "MM/dd/yyyy HH:mm:ss" (si Temporal)
-        required: false
 
 
 jobs:
