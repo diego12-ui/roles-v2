@@ -7,22 +7,6 @@ on:
         description: Ruta del .ps1 en el repo
         required: true
         default: scripts/roles-v2.ps1
-      PrincipalName:
-        description: Nombre del principal (DisplayName)
-        required: true
-      SubscriptionName:
-        description: Nombre de la suscripción (si aplica)
-        required: false
-      ResourceGroupName:
-        description: Resource Group (si aplica)
-        required: false
-      ResourceType:
-        description: Tipo de recurso o alias del mapa (si ScopeType=Resource)
-        required: false
-      ResourceName:
-        description: Nombre del recurso (si ScopeType=Resource)
-        required: false
-
 
 jobs:
   run:
