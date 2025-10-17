@@ -1,0 +1,120 @@
+name: Role Assignments CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      scriptPath:
+        description: Ruta del .ps1 en el repo
+        required: true
+        default: scripts/role_assign.ps1
+      Action:
+        type: choice
+        description: Assign o Remove
+        required: true
+        options: [Assign, Remove]
+        default: Assign
+      PrincipalType:
+        type: choice
+        description: Tipo de principal
+        required: true
+        options: ['Grupo de Red','Service Principal','Managed Identity']
+      PrincipalName:
+        description: Nombre del principal (DisplayName)
+        required: true
+      ScopeType:
+        type: choice
+        description: Tipo de scope
+        required: true
+        options: [ManagementGroup, Subscription, ResourceGroup, Resource]
+      ManagementGroupName:
+        description: Nombre del Management Group (si ScopeType=ManagementGroup)
+        required: false
+      SubscriptionName:
+        description: Nombre de la suscripción (si aplica)
+        required: false
+      ResourceGroupName:
+        description: Resource Group (si aplica)
+        required: false
+      ResourceType:
+        description: Tipo de recurso o alias del mapa (si ScopeType=Resource)
+        required: false
+      ResourceName:
+        description: Nombre del recurso (si ScopeType=Resource)
+        required: false
+      SubresourceId:
+        description: ID completo de subrecurso (opcional si usas ResourceType+ResourceName)
+        required: false
+      RoleName:
+        description: Nombre del rol a asignar/remover
+        required: true
+      DuracionTipo:
+        type: choice
+        description: Permanente o Temporal
+        required: true
+        options: [Permanente, Temporal]
+        default: Permanente
+      FechaInicioPeru:
+        description: Inicio Perú "MM/dd/yyyy HH:mm:ss" (si Temporal)
+        required: false
+      FechaFinPeru:
+        description: Fin Perú "MM/dd/yyyy HH:mm:ss" (si Temporal)
+        required: false
+      CodApp:
+        description: (opcional, no se valida en este script simple)
+        required: false
+      Ambiente:
+        type: choice
+        description: (opcional, no se valida en este script simple)
+        required: false
+        options: ['Producción','Certificación','Desarrollo']
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login (Service Principal + Secret)
+        uses: azure/login@v2
+        with:
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+
+      - name: Ejecutar script de asignación de roles (PowerShell)
+        uses: azure/powershell@v2
+        with:
+          azPSVersion: "latest"
+          errorActionPreference: stop
+          inlineScript: |
+            $p = @{
+              Action         = '${{ inputs.Action }}'
+              PrincipalType  = '${{ inputs.PrincipalType }}'
+              PrincipalName  = '${{ inputs.PrincipalName }}'
+              ScopeType      = '${{ inputs.ScopeType }}'
+              RoleName       = '${{ inputs.RoleName }}'
+              DuracionTipo   = '${{ inputs.DuracionTipo }}'
+            }
+            if ('${{ inputs.ManagementGroupName }}') { $p.ManagementGroupName = '${{ inputs.ManagementGroupName }}' }
+            if ('${{ inputs.SubscriptionName }}')    { $p.SubscriptionName    = '${{ inputs.SubscriptionName }}' }
+            if ('${{ inputs.ResourceGroupName }}')   { $p.ResourceGroupName   = '${{ inputs.ResourceGroupName }}' }
+            if ('${{ inputs.ResourceType }}')        { $p.ResourceType        = '${{ inputs.ResourceType }}' }
+            if ('${{ inputs.ResourceName }}')        { $p.ResourceName        = '${{ inputs.ResourceName }}' }
+            if ('${{ inputs.SubresourceId }}')       { $p.SubresourceId       = '${{ inputs.SubresourceId }}' }
+            if ('${{ inputs.FechaInicioPeru }}')     { $p.FechaInicioPeru     = '${{ inputs.FechaInicioPeru }}' }
+            if ('${{ inputs.FechaFinPeru }}')        { $p.FechaFinPeru        = '${{ inputs.FechaFinPeru }}' }
+            if ('${{ inputs.CodApp }}')              { $p.CodApp              = '${{ inputs.CodApp }}' }
+            if ('${{ inputs.Ambiente }}')            { $p.Ambiente            = '${{ inputs.Ambiente }}' }
+
+            Write-Host "Parámetros efectivos:" ($p | Out-String)
+
+            $scriptPath = '${{ inputs.scriptPath }}'
+            if (-not (Test-Path $scriptPath)) {
+              throw "No se encontró el script en: $scriptPath"
+            }
+
+            & $scriptPath @p
