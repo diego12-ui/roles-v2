@@ -1,9 +1,5 @@
 name: Role Assignments CI
 
-permissions:
-  id-token: write
-  contents: read
-
 on:
   workflow_dispatch:
     inputs:
@@ -37,7 +33,7 @@ jobs:
               PrincipalType  = 'Managed Identity'
               PrincipalName  = 'lappeu2testd01'
               ScopeType      = 'Resource'
-              RoleName       = 'Reader'
+              RoleName       = 'AcrPush'
               DuracionTipo   = 'Permanente'
               SubscriptionName = 'Contabilidad'
               ResourceGroupName = 'rsgreu2testd01'
